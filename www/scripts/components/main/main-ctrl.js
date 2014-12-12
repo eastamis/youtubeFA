@@ -6,17 +6,49 @@ angular.module('youtube-client')
     var Easing = $famous['famous/transitions/Easing'];
     var EventHandler = $famous['famous/core/EventHandler'];
 
+    // famo.us scroller view handler
     $scope.scrollHandler = new EventHandler();
 
     // buffer for storing video data
     var _buf = {
       'popular': [],
       'subscript': [],
-      'search': []
+      'search': [],
+      currSelect: 'popular'
     };
 
+    // Am empty page in beginning
+    $scope.pages = [];
+
+    // calculate the grid cells
+    var CELL_SIZE = { width: 120, height: 90 },
+      // content height needs to sub the height of header & footer
+      _rows = Math.floor(($window.innerHeight-120) / CELL_SIZE.height),
+      _columns = Math.floor($window.innerWidth / CELL_SIZE.width);
+    var _arrangePages = function() {
+      $scope.pages.length = 0;
+      var type = _buf.currSelect,
+        pageTotal = _columns * _rows;
+      for (var used=0, i=0, l=Math.ceil(_buf[type].length/pageTotal); i<l; i+=1) {
+        var num = Math.min(pageTotal, (_buf[type].length - used));
+        $scope.pages.push({ videos: _buf[type].slice(used, num+used) });
+        used += num;
+      }
+    };
+
+    // set famo.us viewer options
+    $scope.options = {
+      horiScrollView: {
+        direction: 0
+      },
+      gridLayoutOptions: {
+        dimensions: [_columns, _rows]
+      }
+    };
+
+    //
     // Prepare Google API ---- Begin
-    // whether google oauth ready?
+    //
     var _loginFlag = false;
     var _loginWorkflow = function() {
       googleService.login().then(function(){
@@ -42,7 +74,9 @@ angular.module('youtube-client')
         alert('Please accept to get your subscription youtube video!');
       });
     };
+    //
     // Prepare Google API ---- End
+    //
 
     $scope.loading = false;
     $scope.loadVideos = function(type, param){
@@ -72,7 +106,9 @@ angular.module('youtube-client')
             opacity: opacity
           });
         });
-        $scope.videos = _buf[type];
+        console.log('total videos: ', _buf[type].length);
+        _buf.currSelect = type;
+        _arrangePages();
       });
       promise.error(function(){
         console.log("API ERROR!", arguments);
@@ -119,31 +155,33 @@ angular.module('youtube-client')
     };
     // tab click handler
     $scope.onTabClick = function(index){
-      var buffer;
       $scope.tabSelect = index;
       switch(index) {
       default:
       case 0: //Popular
         $scope.tabTitle = 'Recommand';
-        buffer = _buf.popular;
+        _buf.currSelect = 'popular'
+        _arrangePages();
         break;
       case 1: //Subscription
         $scope.tabTitle = 'Subscription';
         if (!_loginFlag) {
           _loginWorkflow();
         } else {
-          buffer = _buf.subscript;
+          _buf.currSelect = 'subscript'
+          _arrangePages();
         }
         break;
       case 2: //Search
         $scope.tabTitle = 'Search';
-        buffer = _buf.search;
-        if (buffer.length === 0) {
+        if (_buf.search.length === 0) {
           $scope.updateSearch();
+        } else {
+          _buf.currSelect = 'search'
+          _arrangePages();
         }
         break;
       }
-      $scope.videos = buffer;
     }
     // monitor window resize event
     angular.element($window).bind('resize', function(){
@@ -151,6 +189,12 @@ angular.module('youtube-client')
       for (var i=0, l=$scope.items.length; i<l; i+=1){
         $scope.items[i].width = w;
       }
+      // adjust grid view
+      _rows = Math.floor(($window.innerHeight-120) / CELL_SIZE.height),
+      _columns = Math.floor($window.innerWidth / CELL_SIZE.width),
+      $scope.options.gridLayoutOptions.dimensions = [_columns, _rows];
+      _arrangePages();
+      //
       $scope.$apply('items');
     });
     // tab selector ---- End
