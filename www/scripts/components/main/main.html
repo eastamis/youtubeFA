@@ -1,0 +1,49 @@
+<fa-app class="full-screen">
+
+  <fa-header-footer-layout>
+    <!-- Header -->
+    <fa-modifier fa-size="[undefined, 60]" fa-translate="[0, 0, 10]">
+      <fa-surface>
+      <div class="headerfooter">
+        <img src="images/famous-logo.svg" class="logo" />
+        <form ng-if="tabSelect==2" ng-submit="updateSearch()">
+          <input class="search-bar" ng-model="search.term" type="text">
+        </form>
+        <span ng-if="tabSelect<2">{{tabTitle}}</span>
+      </div>
+      </fa-surface>
+    </fa-modifier>
+
+    <!-- Content -->
+    <fa-scroll-view fa-pipe-from="scrollHandler">
+      <fa-view ng-repeat="video in videos" fa-size="[320, 240]" fa-animate-enter="animEnter(video, $done)">
+        <fa-modifier fa-scale="video.scale.get()" fa-opacity="video.opacity.get()" fa-size="[320, 240]" fa-align="[.5, .0]">
+          <fa-modifier fa-origin="[.5, .5]" fa-translate="[0, 120]">
+            <video-card dimensions="[320, 240]" url="video.thumbnail" video_id="video.vid"></video-card>
+          </fa-modifier>
+        </fa-modifier>
+      </fa-view>
+    </fa-scroll-view>
+
+    <!-- Footer -->
+    <fa-modifier fa-size="[undefined, 60]" fa-translate="[0, 0, 10]">
+      <fa-scroll-view fa-options="tabOptions.scrollView" fa-pipe-from="scrollHandler">
+        <fa-view ng-repeat="item in items">
+          <fa-surface fa-size="[{{item.width}}, {{item.height}}]">
+            <div ng-include src="'view/controller/tab.html'"></div>
+          </fa-surface>
+        </fa-view>
+      </fa-scroll-view>
+    </fa-modifier>
+  </fa-header-footer-layout>
+
+  <fa-modifier fa-size="[undefined, undefined]" fa-opacity="0.7" fa-translate="authTranslate.get()">
+    <fa-surface fa-background-color="'#444444'">
+      <div class="full-screen" ng-include src="'view/popup/authclick.html'"></div>
+    </fa-surface>
+  </fa-modifier>
+
+  <!-- for player below -->
+  <ui-view/>
+
+</fa-app>

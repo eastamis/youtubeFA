@@ -1,0 +1,10 @@
+{
+  "generator-angular-famous-ionic": {
+    "clientFolder": "www",
+    "ionic": false,
+    "famous": true,
+    "ngCordova": false,
+    "fontawesome": false,
+    "bootstrap": false
+  }
+}
