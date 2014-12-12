@@ -18,11 +18,15 @@
     <fa-scroll-view fa-options="options.horiScrollView" fa-pipe-from="scrollHandler">
       <fa-view ng-repeat="page in pages">
 
+        <!-- just for sending input event to scrollHandler -->
+        <fa-surface fa-translate="[0, 0, 0]" fa-pipe-to="scrollHandler">
+        </fa-surface>
+
         <!-- Page -->
         <fa-grid-layout fa-options="options.gridLayoutOptions">
           <fa-view ng-repeat="video in page.videos" fa-size="[120, 90]" fa-animate-enter="animEnter(video, $done)">
             <fa-modifier fa-scale="video.scale.get()" fa-opacity="video.opacity.get()" fa-size="[120, 90]" fa-align="[.0, .0]">
-              <fa-modifier fa-origin="[.5, .5]" fa-translate="[60, 45]">
+              <fa-modifier fa-origin="[.5, .5]" fa-translate="[60, 45, 10]">
                 <video-card dimensions="[120, 90]" url="video.thumbnail" video_id="video.vid"></video-card>
               </fa-modifier>
             </fa-modifier>
@@ -31,7 +35,6 @@
 
       </fa-view>
     </fa-scroll-view>
-
 
     <!-- Footer -->
     <fa-modifier fa-size="[undefined, 60]" fa-translate="[0, 0, 10]">
