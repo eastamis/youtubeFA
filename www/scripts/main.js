@@ -4,12 +4,6 @@ var namespace = 'youtube-client';
 
 var angular = require('angular');
 
-require('angular-animate');
-require('angular-cookies');
-require('angular-touch');
-require('angular-sanitize');
-require('angular-resource');
-require('angular-ui-router');
 require('famous-angular');
 require('underscore');
 

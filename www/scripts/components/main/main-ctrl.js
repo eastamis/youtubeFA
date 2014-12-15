@@ -119,7 +119,9 @@ angular.module('youtube-client')
     };
     // tab click handler
     $scope.onTabClick = function(index){
+      if ($scope.tabSelect === index) { return; }
       var buffer;
+      var contentScrollView = $famous.find('#content-scroll-view')[0].renderNode;
       $scope.tabSelect = index;
       switch(index) {
       default:
@@ -143,6 +145,7 @@ angular.module('youtube-client')
         }
         break;
       }
+      contentScrollView.setPosition(0); // reset position of content scrollview
       $scope.videos = buffer;
     }
     // monitor window resize event

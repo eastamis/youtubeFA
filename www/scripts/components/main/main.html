@@ -15,7 +15,7 @@
     </fa-modifier>
 
     <!-- Content -->
-    <fa-scroll-view fa-pipe-from="scrollHandler">
+    <fa-scroll-view id="content-scroll-view" fa-pipe-from="scrollHandler">
       <fa-view ng-repeat="video in videos" fa-size="[320, 240]" fa-animate-enter="animEnter(video, $done)">
         <fa-modifier fa-scale="video.scale.get()" fa-opacity="video.opacity.get()" fa-size="[320, 240]" fa-align="[.5, .0]">
           <fa-modifier fa-origin="[.5, .5]" fa-translate="[0, 120]">
