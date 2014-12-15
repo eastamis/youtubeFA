@@ -40,14 +40,28 @@
     <fa-modifier fa-size="[undefined, 60]" fa-translate="[0, 0, 10]">
       <!-- <fa-surface fa-background-color="'#ccccff'"> Footer </fa-surface> -->
       <fa-scroll-view fa-options="options.horiScrollView">
-        <fa-view ng-repeat="item in items">
-          <fa-surface fa-size="[{{item.width}}, {{item.height}}]">
+        <fa-view ng-repeat="tab in tabs">
+          <fa-surface fa-size="[{{tab.width}}, {{tab.height}}]">
             <div ng-include src="'view/controller/tab.html'"></div>
           </fa-surface>
         </fa-view>
       </fa-scroll-view>
     </fa-modifier>
   </fa-header-footer-layout>
+
+  <!-- page indicator -->
+  <fa-modifier fa-size="[undefined, 16]" fa-translate="[{{pageIndicAnchor}}, -88, 20]" fa-align="[.5, 1]">
+    <fa-sequential-layout fa-options="options.pageIndicOptions">
+      <fa-view ng-repeat="page in pages">
+        <fa-surface fa-size="[{{pageIndicItemWidth}}, 16]">
+          <center>
+            <div ng-if="currentPage==$index" style="width: 12px; height: 12px; background-color: cyan; border: 1px cyan solid;" ng-click="onPageIndicClick($index)"></div>
+            <div ng-if="currentPage!=$index" style="width: 12px; height: 12px; border: 1px cyan solid;" ng-click="onPageIndicClick($index)"></div>
+          </center>
+        </fa-surface>
+      </fa-view>
+    </fa-sequential-layout>
+  </fa-modifier>
 
   <!-- goto google oauth -->
   <fa-modifier fa-size="[undefined, undefined]" fa-opacity="0.7" fa-translate="authTranslate.get()">
