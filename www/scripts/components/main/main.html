@@ -15,8 +15,8 @@
     </fa-modifier>
 
     <!-- Content -->
-    <fa-scroll-view fa-options="options.horiScrollView" fa-pipe-from="scrollHandler">
-      <fa-view ng-repeat="page in pages">
+    <fa-scroll-view id="content-scroll-view" fa-options="options.horiScrollView" fa-pipe-from="scrollHandler" fa-start-index="0">
+      <fa-view ng-repeat="page in pages" fa-index="{{$index}}" fa-size="{{contentArea}}">
 
         <!-- just for sending input event to scrollHandler -->
         <fa-surface fa-translate="[0, 0, 0]" fa-pipe-to="scrollHandler">
@@ -38,6 +38,7 @@
 
     <!-- Footer -->
     <fa-modifier fa-size="[undefined, 60]" fa-translate="[0, 0, 10]">
+      <!-- <fa-surface fa-background-color="'#ccccff'"> Footer </fa-surface> -->
       <fa-scroll-view fa-options="options.horiScrollView">
         <fa-view ng-repeat="item in items">
           <fa-surface fa-size="[{{item.width}}, {{item.height}}]">

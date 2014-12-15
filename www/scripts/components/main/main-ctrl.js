@@ -20,13 +20,16 @@ angular.module('youtube-client')
     // Am empty page in beginning
     $scope.pages = [];
 
+    // set size of content area,
+    // IT"S IMPORTANT for scrollview pagination
+    $scope.contentArea = [$window.innerWidth, $window.innerHeight-120];
+
     // calculate the grid cells
     var CELL_SIZE = { width: 120, height: 90 },
       // content height needs to sub the height of header & footer
-      _rows = Math.floor(($window.innerHeight-120) / CELL_SIZE.height),
-      _columns = Math.floor($window.innerWidth / CELL_SIZE.width);
+      _rows = Math.floor($scope.contentArea[1] / CELL_SIZE.height),
+      _columns = Math.floor($scope.contentArea[0] / CELL_SIZE.width);
     var _arrangePages = function() {
-      $scope.pages.length = 0;
       var type = _buf.currSelect,
         pageTotal = _columns * _rows;
       for (var used=0, i=0, l=Math.ceil(_buf[type].length/pageTotal); i<l; i+=1) {
@@ -34,12 +37,18 @@ angular.module('youtube-client')
         $scope.pages.push({ videos: _buf[type].slice(used, num+used) });
         used += num;
       }
+      // reset to 1st page
+      //var contentScrollView = $famous.find('#content-scroll-view')[0].renderNode;
+      //contentScrollView.goToPage(0);
     };
 
     // set famo.us viewer options
     $scope.options = {
       horiScrollView: {
-        direction: 0
+        direction: 0,
+        //pageStopSpeed: 10,
+        //pageSwitchSpeed: 0.5,
+        paginated: true
       },
       gridLayoutOptions: {
         dimensions: [_columns, _rows]
@@ -155,6 +164,8 @@ angular.module('youtube-client')
     };
     // tab click handler
     $scope.onTabClick = function(index){
+      if ($scope.tabSelect === index) { return; }
+      $scope.pages.length = 0;
       $scope.tabSelect = index;
       switch(index) {
       default:
@@ -190,6 +201,7 @@ angular.module('youtube-client')
         $scope.items[i].width = w;
       }
       // adjust grid view
+      $scope.pages.length = 0;
       _rows = Math.floor(($window.innerHeight-120) / CELL_SIZE.height),
       _columns = Math.floor($window.innerWidth / CELL_SIZE.width),
       $scope.options.gridLayoutOptions.dimensions = [_columns, _rows];
